@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== History Manager ===
 Contributors: Andrew Stephens
 Tags: widget, post, sidebar, archive, archives, AJAX, categories, category, history, manager, recent, comments
 Requires at least: 2.5
