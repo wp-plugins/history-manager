@@ -1,7 +1,6 @@
 <?php
 
 $q = $_REQUEST['q'];
-$s = $_REQUEST['s'];
 $root = dirname(dirname(dirname(dirname(__FILE__))));
 if (file_exists($root.'/wp-load.php')) {
 		// WP 2.6
@@ -11,8 +10,9 @@ if (file_exists($root.'/wp-load.php')) {
 		require_once($root.'/wp-config.php');
 }
 
+echo "<ul>";
    if ($q == 1) {wp_get_archives('type=monthly&show_post_count=1&limit=1');};
-   if ($q == 2) {wp_list_categories('orderby=count&order=desc&number=2&show_count=1&title_li=');};
+   if ($q == 2) {wp_list_categories('orderby=count&order=desc&number=5&show_count=1&title_li=');};
    if ($q == 5) {wp_get_archives('type=monthly&show_post_count=1');};
    if ($q == 6) {wp_list_categories('orderby=count&order=desc&show_count=1&title_li=');};
    if ($q == 3) {wp_get_archives('type=postbypost&limit=10');};
@@ -32,11 +32,11 @@ $src_count=10; $src_length=30; $pre_HTML='<li><h2>Recent Comments</h2>'; $post_H
 		LIMIT $src_count";
 	$comments = $wpdb->get_results($sql);
 
-	$output .= "\n<ul>";
+//	$output .= "\n<ul>";
 	foreach ($comments as $comment) {
 		$output .= "\n\t<li><a href=\"" . get_permalink($comment->ID) . "#comment-" . $comment->comment_ID  . "\" title=\"on " . $comment->post_title . "\">" . $comment->comment_author . "</a>: " . strip_tags($comment->com_excerpt) . "...</li>";
 	}
-	$output .= "\n</ul>";
+//	$output .= "\n</ul>";
 
 	echo $output;
 
@@ -45,7 +45,7 @@ $src_count=10; $src_length=30; $pre_HTML='<li><h2>Recent Comments</h2>'; $post_H
      if ($q == 1) { echo "<a href=\"Javascript: showPosts(5);\">More &raquo;</a>"; };
      if ($q == 2) { echo "<a href=\"Javascript: showPosts(6);\">More &raquo;</a>"; };
      
-
+echo "</ul>";
 
 
 ?>
