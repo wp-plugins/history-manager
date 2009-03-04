@@ -76,7 +76,7 @@ if (!get_option('history_manager')){
 
 
 register_deactivation_hook( __FILE__, 'history_manager_deactivate');
-function deactivate(){ delete_option('history_manager'); }
+function history_manager_deactivate(){ delete_option('history_manager'); }
 
 
 
