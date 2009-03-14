@@ -80,11 +80,11 @@ $dat = $data['disp'];
 
 <?php } if ($data['disp'][2] == 1) { ?>
 </li><li><span>Categories</span>
-<ul><?php wp_list_categories('orderby=count&order=desc&number=5&show_count=1&title_li='); ?></ul>
+<ul><?php wp_list_categories('orderby=count&order=desc&number=10&show_count=1&title_li='); ?></ul>
 
 <?php } if ($data['disp'][3] == 1) { ?>
 </li><li><span>Archives by Month</span>
-<ul><?php wp_get_archives('type=monthly&show_post_count=1&limit=1'); ?></ul>
+<ul><?php wp_get_archives('type=monthly&show_post_count=1&limit=10'); ?></ul>
 <?php } ?>
 </li></ul>
 
