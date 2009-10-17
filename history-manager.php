@@ -1,66 +1,60 @@
 <?php
 /*
-Plugin Name: History Manager
-Plugin URI: http://andrewanimation.biz/games/history-manager-plugin/
-Description: History manager is a widget that shows archives, categories, recent posts, and recent categories in a collapsable mode on the sidebar.
-Author: Andrew Stephens
-Version: 2.0
-Author URI: http://andrewanimation.biz/
-*/
+ * Plugin Name: History Manager
+ * Version: 2.5
+ * Plugin URI: http://andrewanimation.biz/plugins/history-manager/
+ * Description: History manager is a widget that shows archives, categories, tags, recent posts, and recent comments in a collapsable mode on the sidebar.
+ * Author: Andrew Stephens
+ * Author URI: http://andrewanimation.biz/
+ */
 
-//Adding Scripts
-function history_manager_includes() {
-wp_enqueue_script('jquery');
-wp_enqueue_script('jquery-ui');
-wp_enqueue_script('jquery-ui-accordion', '/wp-content/plugins/history-manager/ui-accordion.js');
-//echo '<link rel="stylesheet" type="text/css" href="jquery-ui.css" />';
+class HistoryManager extends WP_Widget
+{
+function HistoryManager(){
+    $widget_ops = array('classname' => 'widget_history_manager', 'description' => __( "History manager is a widget that shows archives, categories, recent posts, and recent comments in a collapsable mode on the sidebar.") );
+    $this->WP_Widget('history_manager', __('History Manager'), $widget_ops);
 }
 
-//Control Panel on Admin Menu
-function history_manager_control() {
-$data = get_option('history_manager');?>
+function widget($args, $instance){
 
-<p><label>Title<input name="hm_title" type="text" value="<?php echo $data['title']; ?>" /></label></p>
-<!--<p><label>Background Color #<input name="hm_color" type="text" value="<?php echo $data['color']; ?>" /></label></p>-->
+echo "\n\n\n";
 
-<p>Display:<br />
-<label><input type="checkbox" value="1" name="hm_disp0"<?php if ($data['disp'][0] == 1) { echo " checked"; } ?>>Recent Posts</label><br />
-<label><input type="checkbox" value="1" name="hm_disp1"<?php if ($data['disp'][1] == 1) { echo " checked"; } ?>>Recent Comments</label><br />
-<label><input type="checkbox" value="1" name="hm_disp2"<?php if ($data['disp'][2] == 1) { echo " checked"; } ?>>Categories</label><br />
-<label><input type="checkbox" value="1" name="hm_disp3"<?php if ($data['disp'][3] == 1) { echo " checked"; } ?>>Archives by Month</label><br />
-</p>
-
-<?php
-if (isset($_POST['hm_title'])) {
-//    $data['color'] = attribute_escape($_POST['hm_color']);
-    $data['title'] = attribute_escape($_POST['hm_title']);
-    $data['disp'] = array($_POST['hm_disp0'], $_POST['hm_disp1'], $_POST['hm_disp2'], $_POST['hm_disp3']);
-    update_option('history_manager', $data);
-  }
-}
-
-
-function history_manager_init() {
-	if ( !function_exists('register_sidebar_widget') )
-		return;
-
-//Plugin Itself
-function widget_historymanager($args) {
 extract($args);
-$data = get_option('history_manager');
-echo $before_widget . $before_title . $data['title'] . $after_title;
+//print_r($args);
+$title = apply_filters('widget_title', empty($instance['title']) ? '&nbsp;' : $instance['title']);
+$disp0 = empty($instance['disp0']) ? '0' : $instance['disp0'];
+$disp1 = empty($instance['disp1']) ? '0' : $instance['disp1'];
+$disp2 = empty($instance['disp2']) ? '0' : $instance['disp2'];
+$disp3 = empty($instance['disp3']) ? '0' : $instance['disp3'];
+$disp4 = empty($instance['disp4']) ? '0' : $instance['disp4'];
+$limit = empty($instance['limit']) ? 10 : intval($instance['limit']);
+$use_js = empty($instance['use_js']) ? '0' : $instance['use_js'];
 
-$dat = $data['disp'];
+echo $before_widget;
+if ($title) {
+echo $before_title . $title . $after_title."\n";
+}
 
-?>
+if ($use_js == 1) {
+echo "Click to unfold.<br />\n";
+}
 
-<?php if ($dat[0] == 1) { ?>
-<ul><li><span>Recent Posts</span>
-<ul><?php wp_get_archives('type=postbypost&limit=10'); ?></ul>
+echo "<ul";
+if ($use_js == 1) {
+echo " class=\"use_js\"";
+}
+echo ">";
 
-<?php } if ($dat[1] == 1) { ?>
-</li><li><span>Recent Comments</span><ul>
-<?php $src_count=5; $src_length=30; global $wpdb;
+if ($disp0 == 1) {
+   echo "<li><a class=\"whm-link-header\" href=\"#\">Recent Posts</a>";
+   echo "<ul>";
+   wp_get_archives('type=postbypost&limit='.$limit);
+   echo "</ul></li>\n";
+}
+
+if ($disp1 == 1) { ?>
+<li><a class="whm-link-header" href="#">Recent Comments</a><ul>
+<?php $src_length=30; global $wpdb;
 
 	$sql = "SELECT DISTINCT ID, post_title, post_password, comment_ID, comment_post_ID, comment_author, comment_date_gmt, comment_approved, comment_type,
 			SUBSTRING(comment_content,1,$src_length) AS com_excerpt
@@ -68,7 +62,7 @@ $dat = $data['disp'];
 		LEFT OUTER JOIN $wpdb->posts ON ($wpdb->comments.comment_post_ID = $wpdb->posts.ID)
 		WHERE comment_approved = '1' AND comment_type = '' AND post_password = ''
 		ORDER BY comment_date_gmt DESC
-		LIMIT $src_count";
+		LIMIT $limit";
 	$comments = $wpdb->get_results($sql);
 
 	foreach ($comments as $comment) {
@@ -76,67 +70,128 @@ $dat = $data['disp'];
 	}
 
 	echo $output;
- ?></ul>
+ ?></ul></li>
 
-<?php } if ($data['disp'][2] == 1) { ?>
-</li><li><span>Categories</span>
-<ul><?php wp_list_categories('orderby=count&order=desc&number=10&show_count=1&title_li='); ?></ul>
+<?php };
 
-<?php } if ($data['disp'][3] == 1) { ?>
-</li><li><span>Archives by Month</span>
-<ul><?php wp_get_archives('type=monthly&show_post_count=1&limit=10'); ?></ul>
-<?php } ?>
-</li></ul>
+if ($disp2 == 1) {
+   echo "<li><a class=\"whm-link-header\" href=\"#\">Categories</a>";
+   echo "<ul>";
+   wp_list_categories('orderby=count&order=desc&number='.$limit.'&show_count=1&title_li=');
+   echo "</ul></li>\n";
+}
 
+if ($disp4 == 1) {
+   echo "<li><a class=\"whm-link-header\" href=\"#\">Tags</a>";
+   echo "<ul>";
+	$tags = get_tags( array('orderby' => 'count', 'order' => 'DESC') );
+	foreach ( $tags as $tag ) {
+		echo '<li><a href="' . get_tag_link ($tag->term_id) . '" rel="tag">' . $tag->name . '</a> (' . $tag->count . ')</li>';
+	}
+	echo "</ul></li>\n";
+}
 
+if ($disp3 == 1) {
+   echo "<li><a class=\"whm-link-header\" href=\"#\">Archives by Month</a>";
+   echo "<ul>";
+   wp_get_archives('type=monthly&show_post_count=1&limit='.$limit);
+   echo "</ul></li>\n";
+}
 
-<script type="text/javascript">
-var $j = jQuery.noConflict();
-$j(document).ready(function() {
-
-$j("#history-manager ul").accordion({
-header: 'span',
-event: 'click',
-activeClass: 'selected',
-autoHeight: false,
-active: false
-});
-
-
-});
-</script>
-
+echo "</ul>";
+?>
 
 <?php
-
 echo $after_widget;
+}
+
+//Update Widget
+function update($new_instance, $old_instance){
+
+$instance = $old_instance;
+$instance['title'] = strip_tags(stripslashes($new_instance['title']));
+$instance['disp0'] = empty($new_instance['disp0']) ? '0' : '1';
+$instance['disp1'] = empty($new_instance['disp1']) ? '0' : '1';
+$instance['disp2'] = empty($new_instance['disp2']) ? '0' : '1';
+$instance['disp3'] = empty($new_instance['disp3']) ? '0' : '1';
+$instance['disp4'] = empty($new_instance['disp4']) ? '0' : '1';
+$instance['limit'] = empty($new_instance['limit']) ? 10 : intval($new_instance['limit']);
+$instance['use_js'] = $new_instance['use_js'];
+return $instance;
 
 }
 
-register_sidebar_widget(array('History Manager', 'widgets'), 'widget_historymanager');
-register_widget_control('History Manager',  'history_manager_control');
+//Widget Edit Form
+function form($instance){
+
+//Defaults
+$instance = wp_parse_args( (array) $instance, array('title'=>'Post History', 'disp0'=>'1', 'disp1'=>'1', 'disp2'=>'1', 'disp3'=>'1', 'disp4'=>'1', 'use_js'=>'1', 'limit'=>10) );
+
+$title = htmlspecialchars($instance['title']);
+$limit = htmlspecialchars($instance['limit']);
+$disp0[$instance['disp0']] = " selected=\"selected\"";
+$disp1[$instance['disp1']] = " selected=\"selected\"";
+$disp2[$instance['disp2']] = " selected=\"selected\"";
+$disp3[$instance['disp3']] = " selected=\"selected\"";
+$disp4[$instance['disp4']] = " selected=\"selected\"";
+$use_js[$instance['use_js']] = " checked=\"checked\"";
+
+
+echo '<p><label for="' . $this->get_field_name('title') . '">' . __('Title:') . ' <input style="width: 250px;" id="' . $this->get_field_id('title') . '" name="' . $this->get_field_name('title') . '" type="text" value="' . $title . '" /></label></p>'."\n";
+
+echo '<p><label for="' . $this->get_field_name('disp0') . '">Recent Posts</label><br />
+<select name="' . $this->get_field_name('disp0') . '">
+<option value="1"'.$disp0[1].'>Display</option><option value="0"'.$disp0[0].'>Do Not Display</option>
+</select></p>';
+
+echo '<p><label for="' . $this->get_field_name('disp1') . '">Recent Comments</label><br />
+<select name="' . $this->get_field_name('disp1') . '">
+<option value="1"'.$disp1[1].'>Display</option><option value="0"'.$disp1[0].'>Do Not Display</option>
+</select></p>';
+
+echo '<p><label for="' . $this->get_field_name('disp2') . '">Categories</label><br />
+<select name="' . $this->get_field_name('disp2') . '">
+<option value="1"'.$disp2[1].'>Display</option><option value="0"'.$disp2[0].'>Do Not Display</option>
+</select></p>';
+
+echo '<p><label for="' . $this->get_field_name('disp4') . '">Tags</label><br />
+<select name="' . $this->get_field_name('disp4') . '">
+<option value="1"'.$disp4[1].'>Display</option><option value="0"'.$disp4[0].'>Do Not Display</option>
+</select></p>';
+
+echo '<p><label for="' . $this->get_field_name('disp3') . '">Archives by Month</label><br />
+<select name="' . $this->get_field_name('disp3') . '">
+<option value="1"'.$disp3[1].'>Display</option><option value="0"'.$disp3[0].'>Do Not Display</option>
+</select></p>';
+
+echo '<p><label for="' . $this->get_field_name('use_js') . '">Use Accordion Display?</label><br />
+<input type="radio" name="' . $this->get_field_name('use_js') . '" value="1"'.$use_js[1].' />Yes
+<input type="radio" name="' . $this->get_field_name('use_js') . '" value="0"'.$use_js[0].' />No
+</p>';
+
+echo '<p><label for="' . $this->get_field_name('limit') . '">' . __('Display ') . ' <input style="width: 25px;" id="' . $this->get_field_id('limit') . '" name="' . $this->get_field_name('limit') . '" type="text" value="' . $limit . '" /> Posts Each</label></p>'."\n";
 
 }
 
-register_activation_hook( __FILE__, 'history_manager_activate' );
-function history_manager_activate() {
-$data = array( 'title' => 'Post History' , 'disp' => array(1,1,1,1) );
-if (!get_option('history_manager')){
-   add_option('history_manager' , $data);
-} else {
-   update_option('history_manager' , $data);
+}// END class
+
+function HM_Init() {
+register_widget('HistoryManager');
 }
+add_action('widgets_init', 'HM_Init');
+
+
+function history_manager_includes() {
+wp_enqueue_script('jquery');
+wp_enqueue_script('jquery-ui');
+wp_enqueue_script('jquery-ui-accordion', '/wp-content/plugins/history-manager/ui-accordion.js');
+wp_enqueue_script('history-manager', '/wp-content/plugins/history-manager/history-manager.js');
+?>
+<style type="text/css">
+.whm-link-header { font-size: 1.25em; }
+</style>
+<?php
 }
-
-
-register_deactivation_hook( __FILE__, 'history_manager_deactivate');
-function history_manager_deactivate(){ delete_option('history_manager'); }
-
-
-
-// Run our code later in case this loads prior to any required plugins.
-add_action('widgets_init', 'history_manager_init');
 add_action('wp_print_scripts', 'history_manager_includes');
-
 
 ?>
