@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: History Manager
- * Version: 2.5
+ * Version: 2.51
  * Plugin URI: http://andrewanimation.biz/plugins/history-manager/
  * Description: History manager is a widget that shows archives, categories, tags, recent posts, and recent comments in a collapsable mode on the sidebar.
  * Author: Andrew Stephens
@@ -192,6 +192,9 @@ wp_enqueue_script('history-manager', '/wp-content/plugins/history-manager/histor
 </style>
 <?php
 }
+
+if (!is_admin()) {
 add_action('wp_print_scripts', 'history_manager_includes');
+}
 
 ?>
