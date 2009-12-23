@@ -1,7 +1,7 @@
 var $j = jQuery.noConflict();
 $j(document).ready(function() {
 
-$j(".widget_history_manager ul.use_js").accordion({
+$j("ul.hm_use_js").accordion({
 header: 'a.whm-link-header',
 //header: 'a:not(.hm-list a)',
 collapsible: true,
