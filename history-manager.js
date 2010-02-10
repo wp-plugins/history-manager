@@ -1,20 +1,17 @@
 var $j = jQuery.noConflict();
 $j(document).ready(function() {
 
-$j("ul.hm_use_js").accordion({
-header: 'a.whm-link-header',
-//header: 'a:not(.hm-list a)',
-collapsible: true,
-active: 0,
-autoHeight: false
-});
+	$j('.history_manager h3:not(.open)').parent().find('ul').height('0px');
+
+	$j('.history_manager h3').click(function() {
+		//$j(this).parent().parent().children('div').children('ul').animate({'height': '0px'}, 250);
+		if ($j(this).hasClass('open')) {
+			$j(this).parent().find('ul').animate({'height': '0px'},250);
+		} else {
+			var s = $j(this).parent().find('ul')[0].scrollHeight;
+			$j(this).parent().find('ul').animate({'height': s+'px'},250);
+		}
+		$j(this).toggleClass('open');
+	});
 
 });
-
-/*
-//event: 'click',
-//activeClass: 'selected',
-collapsible: true
-//autoHeight: false,
-//active: false
-*/

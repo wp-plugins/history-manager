@@ -2,16 +2,16 @@
 Contributors: Andrew Stephens
 Tags: widget, post, sidebar, archive, archives, categories, category, history, manager, recent, comments, jquery, accordion
 Requires at least: 2.8
-Tested up to: 2.8.6
-Stable tag: 2.5.2
+Tested up to: 2.9.1
+Stable tag: 3.0
 
-History manager is a widget that shows archives, categories, recent posts, and recent categories in a collapsable mode on the sidebar.
+History manager is a widget that shows archives, categories, tags, recent posts, and recent comments in a collapsable mode on the sidebar.
 
 == Description ==
 
-Tired of having your post history taking up your entire sidebar? With History Manager, your recent posts, recent comments, archives by month, tags, and categories are displayed in one widget that allows visitors to unfold whatever they want to see and hide what they don't care about.
+Tired of having your post history taking up your entire sidebar? With History Manager, all of the activity and archives of your blog are displayed in one widget that allows visitors to unfold whatever they want to see and hide what they don't care about.
 
-It uses jQuery's Accordion method, but doesn't look horrible when Javascript is turned off (not that that will matter for 99.9% of your visitors).
+The widget will display correctly with or without Javascript, but the accordion display won't work unless Javascript is on.
 
 == Installation ==
 
@@ -23,7 +23,7 @@ It uses jQuery's Accordion method, but doesn't look horrible when Javascript is 
    
 = Configuration =
 
-The title of the widget and what gets displayed (ex. show or don't show 'Recent Posts') can be changed through the menu on the 'Widgets' page. You can also choose how many posts you want displayed under each category and whether or not to use the accordion interface.
+You can change the title of the widget and the title of each category in the widget using the widget options panel. You can also disable certain categories or make them open by default.
 
 == Screenshots ==
 
@@ -32,6 +32,10 @@ The title of the widget and what gets displayed (ex. show or don't show 'Recent 
 3. Admin Options Panel
 
 == Changelog ==
+
+= 3.0 =
+Built a better accordion method instead of using jQuery UI.
+Now you can choose what categories are open by default.
 
 = 2.5.2 =
 Finally fixed a problem where the Javascript wasn't working in some themes.
