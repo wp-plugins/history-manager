@@ -4,7 +4,6 @@ $j(document).ready(function() {
 	$j('.history_manager h3:not(.open)').parent().find('ul').height('0px');
 
 	$j('.history_manager h3').click(function() {
-		//$j(this).parent().parent().children('div').children('ul').animate({'height': '0px'}, 250);
 		if ($j(this).hasClass('open')) {
 			$j(this).parent().find('ul').animate({'height': '0px'},250);
 		} else {

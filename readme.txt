@@ -2,8 +2,8 @@
 Contributors: Andrew Stephens
 Tags: widget, post, sidebar, archive, archives, categories, category, history, manager, recent, comments, jquery, accordion
 Requires at least: 2.8
-Tested up to: 2.9.1
-Stable tag: 3.0
+Tested up to: 3.0.1
+Stable tag: 3.1
 
 History manager is a widget that shows archives, categories, tags, recent posts, and recent comments in a collapsable mode on the sidebar.
 
@@ -27,11 +27,14 @@ You can change the title of the widget and the title of each category in the wid
 
 == Screenshots ==
 
-1. Default Mode
-2. Clicking on "Archives by Month"
-3. Admin Options Panel
+1. Widget Display
+2. Admin Options Panel
 
 == Changelog ==
+
+= 3.1 =
+Fixed a display issue where custom titles weren't displaying.
+Created a better Admin UI
 
 = 3.0 =
 Built a better accordion method instead of using jQuery UI.

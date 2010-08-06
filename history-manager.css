@@ -1,0 +1,21 @@
+.history_manager h3, .history_manager_nojs h3 { border:0; padding:0; margin:0; }
+.history_manager ul, .history_manager_nojs ul { margin-top: 0; overflow: hidden;}
+
+.history_manager {
+	margin-left:10px;
+}
+
+.history_manager h3 {
+	cursor:pointer;
+}
+
+.history_manager h3 {
+	margin-left:-16px;
+	padding-left:16px;
+	background-image:url(hm_closed.gif);
+	background-repeat: no-repeat;
+}
+
+.history_manager h3.open {
+	background-image:url(hm_open.gif);
+}
